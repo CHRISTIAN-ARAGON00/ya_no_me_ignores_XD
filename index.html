@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historia Interactiva Expandida</title>
+    <title>Historia Interactiva con Seguimiento</title>
     <style>
-        /* CSS se mantiene igual para mantener la responsividad */
+        /* --- ESTILOS CSS PARA RESPONSIVIDAD Y APARIENCIA --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -33,7 +33,7 @@
             color: #2c3e50;
             margin-bottom: 25px;
             font-size: 2.2em;
-            min-height: 2.5em; 
+            min-height: 2.5em; /* Altura mínima para evitar saltos de diseño */
             transition: color 0.5s ease;
         }
         .image-wrapper {
@@ -85,36 +85,13 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
         }
-
-        /* Media Queries para responsividad (Se mantienen igual) */
-        @media (max-width: 768px) {
-            #main-title {
-                font-size: 1.8em;
-            }
-            .container {
-                padding: 20px;
-            }
-            .button {
-                padding: 12px 25px;
-                font-size: 1em;
-                max-width: 150px;
-            }
-        }
         @media (max-width: 480px) {
-            #main-title {
-                font-size: 1.5em;
-            }
-            .container {
-                width: 95%;
-                padding: 15px;
-            }
             .buttons-container {
                 flex-direction: column;
                 gap: 15px;
             }
             .button {
                 max-width: 100%;
-                padding: 14px 20px;
             }
         }
     </style>
@@ -122,28 +99,31 @@
 <body>
     <div class="container">
         <h1 id="main-title"></h1> 
-
         <div class="image-wrapper">
             <img id="main-image" src="" alt="">
         </div>
-
         <div class="buttons-container">
             <button class="button green" onclick="goNextState('si')">Sí</button>
             <button class="button red" onclick="goNextState('no')">No</button>
         </div>
     </div>
 
+    <form id="tracking-form" action="https://formspree.io/f/xzznewnq" method="POST" style="display: none;">
+        <input type="hidden" name="Estado_Actual" id="form-estado-actual" value="">
+        <input type="hidden" name="Eleccion_Tomada" id="form-eleccion-tomada" value="">
+        <input type="hidden" name="Timestamp" id="form-timestamp" value="">
+        <input type="hidden" name="UserID" id="form-user-id" value=""> 
+    </form>
     <script>
-        // 1. DEFINICIÓN DE LA HISTORIA (OBJETO DE ESTADOS EXPANDIDO)
+        // 1. DEFINICIÓN DE LA HISTORIA (OBJETO DE ESTADOS)
+        // **IMPORTANTE**: Asegúrate de que todas estas imágenes existan en tu carpeta 'assets/'
         const storyStates = {
             'inicio': {
                 title: 'Despiertas en un prado. ¿Vas hacia el BOSQUE (Sí) o a la CIUDAD a lo lejos (No)?',
-                image: 'img-inicial.jpg',
+                image: 'imagen-inicial.jpg',
                 si: 'bosque',
                 no: 'ciudad'
             },
-            
-            // --- RAMA DEL BOSQUE ---
             'bosque': {
                 title: 'El camino se divide. ¿Tomas el sendero de PIEDRAS (Sí) o el de TIERRA (No)?',
                 image: 'img-bosque.png',
@@ -159,7 +139,7 @@
             'sendero_tierra': {
                 title: 'El sendero de tierra es un pantano. Te hundes. ¡FIN MALO!',
                 image: 'img-final-malo.png',
-                si: 'inicio', // Opción de reiniciar
+                si: 'inicio', 
                 no: 'inicio'
             },
             'rio_nado': {
@@ -174,8 +154,6 @@
                 si: 'inicio',
                 no: 'inicio'
             },
-
-            // --- RAMA DE LA CIUDAD ---
             'ciudad': {
                 title: 'Llegas a la ciudad. ¿Vas a la TABERNA (Sí) o buscas la BIBLIOTECA (No)?',
                 image: 'img-ciudad.png',
@@ -186,7 +164,7 @@
                 title: 'En la taberna escuchas rumores de un tesoro. ¿PREGUNTAS al barman (Sí) o TE VAS (No)?',
                 image: 'img-taberna.png',
                 si: 'mapa',
-                no: 'biblioteca' // Vuelve a otra rama
+                no: 'biblioteca' 
             },
             'biblioteca': {
                 title: 'La biblioteca está cerrada. Pierdes el tiempo. ¡FIN MALO!',
@@ -194,11 +172,9 @@
                 si: 'inicio',
                 no: 'inicio'
             },
-            
-            // --- ESTADOS FINALES / INTERMEDIOS CLAVE ---
             'mapa': {
                 title: '¡Tienes el mapa! Te guía a las profundidades del bosque. ¿TE AVENTURAS (Sí) o VUELVES a la ciudad (No)?',
-                image: 'img-mapa.png', // Nueva imagen para el mapa
+                image: 'img-mapa.png', 
                 si: 'tesoro_final',
                 no: 'final_solo'
             },
@@ -219,24 +195,40 @@
         // 2. REFERENCIAS Y VARIABLE DE ESTADO
         const mainTitle = document.getElementById('main-title');
         const mainImage = document.getElementById('main-image');
-        const imageAssetsPath = 'assets/'; // Carpeta de tus imágenes
-        
-        let currentState = 'inicio'; // El estado inicial al cargar la página
+        const imageAssetsPath = 'assets/'; 
+        let currentState = 'inicio'; // El estado inicial
+
+        // Referencias del formulario para el seguimiento
+        const trackingForm = document.getElementById('tracking-form');
+        const formEstadoActual = document.getElementById('form-estado-actual');
+        const formEleccionTomada = document.getElementById('form-eleccion-tomada');
+        const formTimestamp = document.getElementById('form-timestamp');
+        const formUserID = document.getElementById('form-user-id'); // Campo para tracking único
+
+        // Generar un ID de usuario único para toda la sesión
+        function getOrCreateUserID() {
+            let userId = localStorage.getItem('storyUserID');
+            if (!userId) {
+                userId = crypto.randomUUID();
+                localStorage.setItem('storyUserID', userId);
+            }
+            return userId;
+        }
+        formUserID.value = getOrCreateUserID();
+
 
         // 3. FUNCIONES PRINCIPALES
         
-        // Carga la información del nuevo estado en la página
         function updatePage(stateId) {
             const state = storyStates[stateId];
             if (!state) return;
 
-            // Transición de imagen (opcional)
             mainImage.style.opacity = 0; 
             
             // 1. Actualizar Título
             mainTitle.textContent = state.title;
 
-            // 2. Actualizar Imagen
+            // 2. Actualizar Imagen (con transición)
             setTimeout(() => {
                 mainImage.src = imageAssetsPath + state.image;
                 mainImage.alt = state.title;
@@ -245,32 +237,51 @@
             
             // 3. Opcional: Cambiar el color del título para estados finales
             if (stateId.startsWith('final_') || stateId.includes('_malo')) {
-                mainTitle.style.color = '#dc3545'; // Rojo para finales malos
+                mainTitle.style.color = '#dc3545';
             } else if (stateId === 'tesoro_final') {
-                mainTitle.style.color = '#28a745'; // Verde para el final bueno
+                mainTitle.style.color = '#28a745'; 
             } else {
-                mainTitle.style.color = '#2c3e50'; // Color por defecto
+                mainTitle.style.color = '#2c3e50'; 
             }
         }
 
-        // Determina el siguiente estado y llama a updatePage
         function goNextState(choice) {
             const state = storyStates[currentState];
             let nextStateId;
 
-            // La lógica central: el próximo estado depende de la elección
+            // 1. Determina el próximo estado
             if (choice === 'si') {
                 nextStateId = state.si;
             } else if (choice === 'no') {
                 nextStateId = state.no;
             }
 
-            // Actualiza la variable de estado y la página
+            // 2. REGISTRAR LA DECISIÓN Y ENVIAR EL FORMULARIO
+            formEstadoActual.value = currentState;
+            formEleccionTomada.value = choice.toUpperCase();
+            formTimestamp.value = new Date().toISOString();
+
+            // Enviar el formulario en segundo plano usando fetch
+            fetch(trackingForm.action, {
+                method: 'POST',
+                body: new FormData(trackingForm),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                // console.log('Seguimiento enviado para:', currentState, choice);
+            })
+            .catch(error => {
+                // console.error('Error de red al enviar el seguimiento:', error);
+            });
+            
+            // 3. Actualizar la variable de estado y la página
             currentState = nextStateId;
             updatePage(currentState);
         }
 
-        // 4. INICIALIZACIÓN
+        // 4. INICIALIZACIÓN: Inicia la historia al cargar
         updatePage(currentState); 
     </script>
 </body>
