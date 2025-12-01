@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pregunta Interactiva</title>
+    <title>Historia Interactiva Expandida</title>
     <style>
+        /* CSS se mantiene igual para mantener la responsividad */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #e0f2f7; /* Un azul claro suave */
+            background-color: #e0f2f7;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -28,25 +29,26 @@
             text-align: center;
             box-sizing: border-box;
         }
-        #main-title { /* Añadido ID para JS */
+        #main-title {
             color: #2c3e50;
             margin-bottom: 25px;
             font-size: 2.2em;
-            transition: color 0.5s ease; /* Transición para el color del título */
+            min-height: 2.5em; 
+            transition: color 0.5s ease;
         }
         .image-wrapper {
             margin: 30px 0;
-            min-height: 250px; /* Asegura un espacio para la imagen, evita saltos de diseño */
-            display: flex; /* Para centrar la imagen verticalmente si es más pequeña */
+            min-height: 250px;
+            display: flex;
             align-items: center;
             justify-content: center;
         }
-        #main-image { /* Añadido ID para JS */
+        #main-image {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, opacity 0.3s ease; /* Transición para la imagen */
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
         .buttons-container {
             display: flex;
@@ -84,7 +86,7 @@
             box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
         }
 
-        /* Media Queries para responsividad */
+        /* Media Queries para responsividad (Se mantienen igual) */
         @media (max-width: 768px) {
             #main-title {
                 font-size: 1.8em;
@@ -98,7 +100,6 @@
                 max-width: 150px;
             }
         }
-
         @media (max-width: 480px) {
             #main-title {
                 font-size: 1.5em;
@@ -120,51 +121,157 @@
 </head>
 <body>
     <div class="container">
-        <h1 id="main-title">¿Te gustaría hacer algo genial hoy?</h1>
+        <h1 id="main-title"></h1> 
 
         <div class="image-wrapper">
-            <img id="main-image" src="assets/imagen-inicial.jpg" alt="Imagen Inicial">
+            <img id="main-image" src="" alt="">
         </div>
 
         <div class="buttons-container">
-            <button class="button green" onclick="handleChoice('si')">Sí</button>
-            <button class="button red" onclick="handleChoice('no')">No</button>
+            <button class="button green" onclick="goNextState('si')">Sí</button>
+            <button class="button red" onclick="goNextState('no')">No</button>
         </div>
     </div>
 
     <script>
-        // Referencias a los elementos que vamos a cambiar
-        const mainTitle = document.getElementById('main-title');
-        const mainImage = document.getElementById('main-image');
+        // 1. DEFINICIÓN DE LA HISTORIA (OBJETO DE ESTADOS EXPANDIDO)
+        const storyStates = {
+            'inicio': {
+                title: 'Despiertas en un prado. ¿Vas hacia el BOSQUE (Sí) o a la CIUDAD a lo lejos (No)?',
+                image: 'img-inicial.jpg',
+                si: 'bosque',
+                no: 'ciudad'
+            },
+            
+            // --- RAMA DEL BOSQUE ---
+            'bosque': {
+                title: 'El camino se divide. ¿Tomas el sendero de PIEDRAS (Sí) o el de TIERRA (No)?',
+                image: 'img-bosque.png',
+                si: 'sendero_piedras',
+                no: 'sendero_tierra'
+            },
+            'sendero_piedras': {
+                title: 'Llegas a un río. ¿CRUZAS a nado (Sí) o BUSCAS un puente (No)?',
+                image: 'img-rio.png',
+                si: 'rio_nado',
+                no: 'rio_puente'
+            },
+            'sendero_tierra': {
+                title: 'El sendero de tierra es un pantano. Te hundes. ¡FIN MALO!',
+                image: 'img-final-malo.png',
+                si: 'inicio', // Opción de reiniciar
+                no: 'inicio'
+            },
+            'rio_nado': {
+                title: 'Cruzas el río. Un viejo sabio te ofrece un mapa. ¿LO ACEPTAS (Sí) o lo IGNORAS (No)?',
+                image: 'img-viejo.png',
+                si: 'mapa',
+                no: 'final_solo'
+            },
+            'rio_puente': {
+                title: 'Encuentras el puente... pero está custodiado por un Troll. ¡FIN MALO!',
+                image: 'img-final-malo.png',
+                si: 'inicio',
+                no: 'inicio'
+            },
 
-        // Rutas de las imágenes (ajusta si tu carpeta se llama diferente)
-        const imagePaths = {
-            initial: 'assets/imagen-inicial.png',
-            si: 'assets/imagen-si.webp',
-            no: 'assets/imagen-no.jpeg'
+            // --- RAMA DE LA CIUDAD ---
+            'ciudad': {
+                title: 'Llegas a la ciudad. ¿Vas a la TABERNA (Sí) o buscas la BIBLIOTECA (No)?',
+                image: 'img-ciudad.png',
+                si: 'taberna',
+                no: 'biblioteca'
+            },
+            'taberna': {
+                title: 'En la taberna escuchas rumores de un tesoro. ¿PREGUNTAS al barman (Sí) o TE VAS (No)?',
+                image: 'img-taberna.png',
+                si: 'mapa',
+                no: 'biblioteca' // Vuelve a otra rama
+            },
+            'biblioteca': {
+                title: 'La biblioteca está cerrada. Pierdes el tiempo. ¡FIN MALO!',
+                image: 'img-final-malo.png',
+                si: 'inicio',
+                no: 'inicio'
+            },
+            
+            // --- ESTADOS FINALES / INTERMEDIOS CLAVE ---
+            'mapa': {
+                title: '¡Tienes el mapa! Te guía a las profundidades del bosque. ¿TE AVENTURAS (Sí) o VUELVES a la ciudad (No)?',
+                image: 'img-mapa.png', // Nueva imagen para el mapa
+                si: 'tesoro_final',
+                no: 'final_solo'
+            },
+            'tesoro_final': {
+                title: '¡FELICIDADES! Encontraste el tesoro. ¡GANASTE LA AVENTURA!',
+                image: 'img-tesoro.png',
+                si: 'inicio',
+                no: 'inicio'
+            },
+            'final_solo': {
+                title: 'Sigues solo y te pierdes. Tu aventura termina aquí. ¡FIN MALO!',
+                image: 'img-final-malo.png',
+                si: 'inicio',
+                no: 'inicio'
+            }
         };
 
-        function handleChoice(choice) {
-            if (choice === 'si') {
-                mainTitle.textContent = '¡Qué bien! ¡Eres genial!';
-                mainTitle.style.color = '#28a745'; // Cambia el color del título a verde
-                mainImage.style.opacity = 0; // Inicia la transición de opacidad
-                setTimeout(() => { // Espera un poco antes de cambiar la imagen y restaurar opacidad
-                    mainImage.src = imagePaths.si;
-                    mainImage.alt = 'Persona feliz';
-                    mainImage.style.opacity = 1;
-                }, 300); // Duración de la transición CSS
-            } else if (choice === 'no') {
-                mainTitle.textContent = '¡Oh, ánimo! ¡Mañana será mejor!';
-                mainTitle.style.color = '#dc3545'; // Cambia el color del título a rojo
-                mainImage.style.opacity = 0;
-                setTimeout(() => {
-                    mainImage.src = imagePaths.no;
-                    mainImage.alt = 'Persona pensativa';
-                    mainImage.style.opacity = 1;
-                }, 300);
+        // 2. REFERENCIAS Y VARIABLE DE ESTADO
+        const mainTitle = document.getElementById('main-title');
+        const mainImage = document.getElementById('main-image');
+        const imageAssetsPath = 'assets/'; // Carpeta de tus imágenes
+        
+        let currentState = 'inicio'; // El estado inicial al cargar la página
+
+        // 3. FUNCIONES PRINCIPALES
+        
+        // Carga la información del nuevo estado en la página
+        function updatePage(stateId) {
+            const state = storyStates[stateId];
+            if (!state) return;
+
+            // Transición de imagen (opcional)
+            mainImage.style.opacity = 0; 
+            
+            // 1. Actualizar Título
+            mainTitle.textContent = state.title;
+
+            // 2. Actualizar Imagen
+            setTimeout(() => {
+                mainImage.src = imageAssetsPath + state.image;
+                mainImage.alt = state.title;
+                mainImage.style.opacity = 1;
+            }, 300); 
+            
+            // 3. Opcional: Cambiar el color del título para estados finales
+            if (stateId.startsWith('final_') || stateId.includes('_malo')) {
+                mainTitle.style.color = '#dc3545'; // Rojo para finales malos
+            } else if (stateId === 'tesoro_final') {
+                mainTitle.style.color = '#28a745'; // Verde para el final bueno
+            } else {
+                mainTitle.style.color = '#2c3e50'; // Color por defecto
             }
         }
+
+        // Determina el siguiente estado y llama a updatePage
+        function goNextState(choice) {
+            const state = storyStates[currentState];
+            let nextStateId;
+
+            // La lógica central: el próximo estado depende de la elección
+            if (choice === 'si') {
+                nextStateId = state.si;
+            } else if (choice === 'no') {
+                nextStateId = state.no;
+            }
+
+            // Actualiza la variable de estado y la página
+            currentState = nextStateId;
+            updatePage(currentState);
+        }
+
+        // 4. INICIALIZACIÓN
+        updatePage(currentState); 
     </script>
 </body>
 </html>
