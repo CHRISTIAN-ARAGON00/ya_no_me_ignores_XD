@@ -10,7 +10,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #e0f2f7;
+            background-color: #734ecf;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -117,82 +117,117 @@
     <script>
         // 1. DEFINICIÓN DE LA HISTORIA (OBJETO DE ESTADOS)
         // **IMPORTANTE**: Asegúrate de que todas estas imágenes existan en tu carpeta 'assets/'
+        // 1. DEFINICIÓN DE LA HISTORIA (OBJETO DE ESTADOS EXPANDIDO)
         const storyStates = {
             'inicio': {
-                title: 'Despiertas en un prado. ¿Vas hacia el BOSQUE (Sí) o a la CIUDAD a lo lejos (No)?',
-                image: 'imagen-inicial.jpg',
-                si: 'bosque',
-                no: 'ciudad'
+                title: '¡HOLA! Buenos días, tardes o noches... ¿En serio creíste que me iba a dar por vencido?',
+                image: 'img-inicial.png',
+                si: 'persistente', // Sí, creíste que se iba a rendir
+                no: 'recuerdas'    // No, recuerdas que es persistente
             },
-            'bosque': {
-                title: 'El camino se divide. ¿Tomas el sendero de PIEDRAS (Sí) o el de TIERRA (No)?',
-                image: 'img-bosque.png',
-                si: 'sendero_piedras',
-                no: 'sendero_tierra'
+            'persistente': {
+                title: 'No lo puedo creer. No sabes lo persistente que puedo ser (en el buen sentido).  estas dos semanas estaba a full entonces no pude enviarte los videos que te dije para hacer reír hasta que me respondas pero dije mejor voy hacer algo que se me da bien xD como estás? Cómo has pasado no he sabido nada de ti ....BIEN (Sí) / MAL (No)?',
+                image: 'img-full.png',
+                si: 'alegria',
+                no: 'apoyo'
             },
-            'sendero_piedras': {
-                title: 'Llegas a un río. ¿CRUZAS a nado (Sí) o BUSCAS un puente (No)?',
-                image: 'img-rio.png',
-                si: 'rio_nado',
-                no: 'rio_puente'
+            'recuerdas': {
+                title: '¡Entonces sí recuerdas algo de mí! Estaba a full estas semanas. estas dos semanas estaba a full entonces no pude enviarte los videos que te dije para hacer reír hasta que me respondas pero dije mejor voy hacer algo que se me da bien xD como estás? Cómo has pasado no he sabido nada de ti... BIEN (Sí) / MAL (No)?',
+                image: 'img-full.png',
+                si: 'alegria',
+                no: 'apoyo'
             },
-            'sendero_tierra': {
-                title: 'El sendero de tierra es un pantano. Te hundes. ¡FIN MALO!',
-                image: 'img-final-malo.png',
-                si: 'inicio', 
-                no: 'inicio'
+            'alegria': {
+                title: '¡Me alegro mucho de verdad! Sigue así. Me gusta que sonrías. Y, cuéntame, ¿sigues jugando BASKET? (Sí / No)',
+                image: 'img-sonrisa.png',
+                si: 'basket_si',
+                no: 'basket_no'
             },
-            'rio_nado': {
-                title: 'Cruzas el río. Un viejo sabio te ofrece un mapa. ¿LO ACEPTAS (Sí) o lo IGNORAS (No)?',
-                image: 'img-viejo.png',
-                si: 'mapa',
-                no: 'final_solo'
+            'apoyo': {
+                title: 'No me digas ......aunque no me tengas confianza y no hemos hablado nada en años recuerda que puedes contar conmigo, solo avísame si quieres salir a caminar o lo que quieras...TODO VA A MEJORAR....aaaaah me gusta que sonrías...y cuentame sigues jugando basket? De lo que me acuerdo eras muy buena jugando.',
+
+                image: 'img-confianza.png',
+                si: 'basket_si',
+                no: 'basket_no'
             },
-            'rio_puente': {
-                title: 'Encuentras el puente... pero está custodiado por un Troll. ¡FIN MALO!',
-                image: 'img-final-malo.png',
-                si: 'inicio',
-                no: 'inicio'
+            'basket_si': {
+                title: '¡Lo sabía! Eres muy buena. Tenemos que jugar un día de estos, debes jugar mucho mejor que yo ya que no he jugado en full tiempo...y has visto a alguno de los compañeros del cole ?',
+                image: 'img-basket.png',
+                si: 'compas_si',
+                no: 'compas_no'
             },
-            'ciudad': {
-                title: 'Llegas a la ciudad. ¿Vas a la TABERNA (Sí) o buscas la BIBLIOTECA (No)?',
-                image: 'img-ciudad.png',
-                si: 'taberna',
-                no: 'biblioteca'
+            'basket_no': {
+                title: '¡Qué pena! Pero jugabas bien así toca salir un día de estos para que te acuerdes y me hagas acuerdo jaja ya que no he jugado ya full tiempo...y has visto a alguno de los compañeros del cole ?',
+                image: 'img-basket.png',
+                si: 'compas_si',
+                no: 'compas_no'
             },
-            'taberna': {
-                title: 'En la taberna escuchas rumores de un tesoro. ¿PREGUNTAS al barman (Sí) o TE VAS (No)?',
-                image: 'img-taberna.png',
-                si: 'mapa',
-                no: 'biblioteca' 
+            'compas_si': {
+                title: '¡Que bacán!, espero que a todos les vaya muy bien.... ',
+                image: 'img-cafe.png',
+                si: 'hacker_si',
+                no: 'hacker_si'
             },
-            'biblioteca': {
-                title: 'La biblioteca está cerrada. Pierdes el tiempo. ¡FIN MALO!',
-                image: 'img-final-malo.png',
-                si: 'inicio',
-                no: 'inicio'
+            'compas_no': {
+                title: '¡Chale!, espero que a todos les vaya muy bien.... ',
+                image: 'img-cafe.png',
+                si: 'hacker_si',
+                no: 'hacker_si'
             },
-            'mapa': {
-                title: '¡Tienes el mapa! Te guía a las profundidades del bosque. ¿TE AVENTURAS (Sí) o VUELVES a la ciudad (No)?',
-                image: 'img-mapa.png', 
-                si: 'tesoro_final',
-                no: 'final_solo'
+            'hacker_si': {
+                title: '¡ESPERA!, TIENES QUE ESPERAR 10 SEGUNDOS PARA QUE YO PUEDA ACABAR DE ROBAR TUS DATOS Y CONTRASEÑAS XD ¿ESTÁS DE ACUERDO? ',
+                image: 'img-cafe.png',
+                si: 'mentira_si',
+                no: 'mentira_no'
             },
-            'tesoro_final': {
-                title: '¡FELICIDADES! Encontraste el tesoro. ¡GANASTE LA AVENTURA!',
-                image: 'img-tesoro.png',
-                si: 'inicio',
-                no: 'inicio'
+            'mentira_si': {
+                title: '¡Cómo puedes estar de acuerdo! jajaj pero muy tarde ya tengo todos tus datos....jaja mentira nomás.. jajaj pero bueno ...ha sido interesante tener esta conversación indirectamente ¿verdad?',
+                image: 'img-cafe.png',
+                si: 'verdad_si',
+                no: 'verdad_no'
             },
-            'final_solo': {
-                title: 'Sigues solo y te pierdes. Tu aventura termina aquí. ¡FIN MALO!',
-                image: 'img-final-malo.png',
-                si: 'inicio',
-                no: 'inicio'
-            }
+            'mentira_no': {
+                title: '¡Buena respuesta! jajaj pero muy tarde ya tengo todos tus datos....jaja mentira nomás...jajaj pero bueno ...ha sido interesante tener esta conversación indirectamente ¿verdad? ',
+                image: 'img-cafe.png',
+                si: 'verdad_si',
+                no: 'verdad_no'
+            },
+            'verdad_si': {
+                title: '¡Me alegro! Espero haberte sacado por lo menos una sonrisa, ¿recuerdas lo que me preguntaste hace tiempo sobre si te quería VOLVER A VER? (adjunto evidencia) ',
+                image: 'img-cafe.png',
+                si: 'ver_si',
+                no: 'ver_no'
+            },
+            'verdad_no': {
+                title: '¡Chale, no diga eso compa :(!, Espero haberte sacado por lo menos una sonrisa, ¿recuerdas lo que me preguntaste hace tiempo sobre si te quería VOLVER A VER? (adjunto evidencia) ',
+                image: 'img-cafe.png',
+                si: 'ver_si',
+                no: 'ver_no'
+            },
+   
+            'ver_si': {
+                title: '¡Obviamente lo recuerdas! Te dejo mi numero para que me escribas al whats, (0978875433) !Ojito es para que me escribas no para que lo tengas de adorno o me ignores jaja... en serio escribeme yo sí respondo jaja ¡ recuerda que eres una persona de las que simeper he valorado mucho',
+                image: 'img-cafe.png',
+                si: 'reunion_si',
+                no: 'reunion_si'
+            },
+            'ver_no': {
+                title: 'Vaya, que mala memoria pero con todo viste la evidencia jaja. Igual te dejo mi numero para que me escribas al whats, (0978875433) !Ojito es para que me escribas no para que lo tengas de adorno o me ignores jaja... en serio escribeme yo sí respondo jaja ¡ recuerda que eres una persona de las que simeper he valorado mucho',
+                image: 'img-cafe.png',
+                si: 'reunion_si',
+                no: 'reunion_si'
+            },
+            
+            'reunion_si': {
+                title: '¡Bueno eso ha sido todo cuídate!!Para mayor información escríbale al creador por whats¡',
+                image: 'img-final.png',
+                si: 'reunion_si', 
+                no: 'reunion_si'
+            },
+
         };
 
-        // 2. REFERENCIAS Y VARIABLE DE ESTADO
+    
         const mainTitle = document.getElementById('main-title');
         const mainImage = document.getElementById('main-image');
         const imageAssetsPath = 'assets/'; 
