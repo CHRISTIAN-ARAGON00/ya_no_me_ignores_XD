@@ -121,106 +121,111 @@
         const storyStates = {
             'inicio': {
                 title: '¡HOLA! Buenos días, tardes o noches... ¿En serio creíste que me iba a dar por vencido?',
-                image: 'img-inicial.png',
-                si: 'persistente', // Sí, creíste que se iba a rendir
-                no: 'recuerdas'    // No, recuerdas que es persistente
+                image: '1.gif',
+                si: 'persistente', 
+                no: 'recuerdas'   
             },
             'persistente': {
-                title: 'No lo puedo creer. No sabes lo persistente que puedo ser (en el buen sentido).  estas dos semanas estaba a full entonces no pude enviarte los videos que te dije para hacer reír hasta que me respondas pero dije mejor voy hacer algo que se me da bien xD como estás? Cómo has pasado no he sabido nada de ti ....BIEN (Sí) / MAL (No)?',
-                image: 'img-full.png',
+                title: 'No lo puedo creer. No sabes lo persistente que puedo ser (en el buen sentido).  estas dos semanas estaba a full entonces no pude enviarte los videos que te dije para hacerte reír hasta que me respondas pero dije mejor voy hacer algo que se me da bien xD como estás? Cómo has pasado no he sabido nada de ti ....BIEN (Sí) / MAL (No)?',
+                image: '2.gif',
                 si: 'alegria',
                 no: 'apoyo'
             },
             'recuerdas': {
-                title: '¡Entonces sí recuerdas algo de mí! Estaba a full estas semanas. estas dos semanas estaba a full entonces no pude enviarte los videos que te dije para hacer reír hasta que me respondas pero dije mejor voy hacer algo que se me da bien xD como estás? Cómo has pasado no he sabido nada de ti... BIEN (Sí) / MAL (No)?',
-                image: 'img-full.png',
+                title: '¡Entonces sí recuerdas algo de mí! Estas dos semanas estaba a full entonces no pude enviarte los videos que te dije para hacer reír hasta que me respondas pero dije mejor voy hacer algo que se me da bien xD como estás? Cómo has pasado no he sabido nada de ti... BIEN (Sí) / MAL (No)?',
+                image: '3.gif',
                 si: 'alegria',
                 no: 'apoyo'
             },
             'alegria': {
                 title: '¡Me alegro mucho de verdad! Sigue así. Me gusta que sonrías. Y, cuéntame, ¿sigues jugando BASKET? (Sí / No)',
-                image: 'img-sonrisa.png',
+                image: '4.gif',
                 si: 'basket_si',
                 no: 'basket_no'
             },
             'apoyo': {
                 title: 'No me digas ......aunque no me tengas confianza y no hemos hablado nada en años recuerda que puedes contar conmigo, solo avísame si quieres salir a caminar o lo que quieras...TODO VA A MEJORAR....aaaaah me gusta que sonrías...y cuentame sigues jugando basket? De lo que me acuerdo eras muy buena jugando.',
-
-                image: 'img-confianza.png',
+                image: '55.gif',
                 si: 'basket_si',
                 no: 'basket_no'
             },
             'basket_si': {
                 title: '¡Lo sabía! Eres muy buena. Tenemos que jugar un día de estos, debes jugar mucho mejor que yo ya que no he jugado en full tiempo...y has visto a alguno de los compañeros del cole ?',
-                image: 'img-basket.png',
+                image: '67.gif',
                 si: 'compas_si',
                 no: 'compas_no'
             },
             'basket_no': {
                 title: '¡Qué pena! Pero jugabas bien así toca salir un día de estos para que te acuerdes y me hagas acuerdo jaja ya que no he jugado ya full tiempo...y has visto a alguno de los compañeros del cole ?',
-                image: 'img-basket.png',
+                image: '67.gif',
                 si: 'compas_si',
                 no: 'compas_no'
             },
             'compas_si': {
                 title: '¡Que bacán!, espero que a todos les vaya muy bien.... ',
-                image: 'img-cafe.png',
+                image: '89.gif',
                 si: 'hacker_si',
                 no: 'hacker_si'
             },
             'compas_no': {
                 title: '¡Chale!, espero que a todos les vaya muy bien.... ',
-                image: 'img-cafe.png',
+                image: '89.gif',
                 si: 'hacker_si',
                 no: 'hacker_si'
             },
             'hacker_si': {
                 title: '¡ESPERA!, TIENES QUE ESPERAR 10 SEGUNDOS PARA QUE YO PUEDA ACABAR DE ROBAR TUS DATOS Y CONTRASEÑAS XD ¿ESTÁS DE ACUERDO? ',
-                image: 'img-cafe.png',
+                image: '10.gif',
                 si: 'mentira_si',
                 no: 'mentira_no'
             },
             'mentira_si': {
                 title: '¡Cómo puedes estar de acuerdo! jajaj pero muy tarde ya tengo todos tus datos....jaja mentira nomás.. jajaj pero bueno ...ha sido interesante tener esta conversación indirectamente ¿verdad?',
-                image: 'img-cafe.png',
+                image: '11.gif',
                 si: 'verdad_si',
                 no: 'verdad_no'
             },
             'mentira_no': {
                 title: '¡Buena respuesta! jajaj pero muy tarde ya tengo todos tus datos....jaja mentira nomás...jajaj pero bueno ...ha sido interesante tener esta conversación indirectamente ¿verdad? ',
-                image: 'img-cafe.png',
+                image: '12.gif',
                 si: 'verdad_si',
                 no: 'verdad_no'
             },
             'verdad_si': {
-                title: '¡Me alegro! Espero haberte sacado por lo menos una sonrisa, ¿recuerdas lo que me preguntaste hace tiempo sobre si te quería VOLVER A VER? (adjunto evidencia) ',
-                image: 'img-cafe.png',
+                title: '¡Me alegro! Espero haberte sacado por lo menos una sonrisa, ¿recuerdas lo que me preguntaste hace tiempo sobre si te quería VOLVER A VER? (adjunto evidencia al final) ',
+                image: '13.gif',
                 si: 'ver_si',
                 no: 'ver_no'
             },
             'verdad_no': {
-                title: '¡Chale, no diga eso compa :(!, Espero haberte sacado por lo menos una sonrisa, ¿recuerdas lo que me preguntaste hace tiempo sobre si te quería VOLVER A VER? (adjunto evidencia) ',
-                image: 'img-cafe.png',
+                title: '¡Chale, no diga eso compa :(!, Espero haberte sacado por lo menos una sonrisa, ¿recuerdas lo que me preguntaste hace tiempo sobre si te quería VOLVER A VER? (adjunto evidencia al final) ',
+                image: '14.gif',
                 si: 'ver_si',
                 no: 'ver_no'
             },
    
             'ver_si': {
-                title: '¡Obviamente lo recuerdas! Te dejo mi numero para que me escribas al whats, (0978875433) !Ojito es para que me escribas no para que lo tengas de adorno o me ignores jaja... en serio escribeme yo sí respondo jaja ¡ recuerda que eres una persona de las que simeper he valorado mucho',
-                image: 'img-cafe.png',
-                si: 'reunion_si',
-                no: 'reunion_si'
+                title: '¡Obviamente lo recuerdas! Con todo te dejo la evidencia en la siguiente jaja. Te dejo mi numero para que me escribas al whats, (0978875433) !Ojito es para que me escribas no para que lo tengas de adorno o me ignores jaja... en serio escribeme yo sí respondo jaja ¡ recuerda que eres una persona de las que siempre he valorado mucho',
+                image: '15.gif',
+                si: 'evidencia_si',
+                no: 'evidencia_si'
             },
             'ver_no': {
-                title: 'Vaya, que mala memoria pero con todo viste la evidencia jaja. Igual te dejo mi numero para que me escribas al whats, (0978875433) !Ojito es para que me escribas no para que lo tengas de adorno o me ignores jaja... en serio escribeme yo sí respondo jaja ¡ recuerda que eres una persona de las que simeper he valorado mucho',
-                image: 'img-cafe.png',
-                si: 'reunion_si',
-                no: 'reunion_si'
+                title: 'Vaya, que mala memoria pero con todo te dejo la evidencia en la siguiente jaja. Igual te dejo mi numero para que me escribas al whats, (0978875433) !Ojito es para que me escribas no para que lo tengas de adorno o me ignores jaja... en serio escribeme yo sí respondo jaja ¡ recuerda que eres una persona de las que siempre he valorado mucho',
+                image: '16.gif',
+                si: 'evidencia_si',
+                no: 'evidencia_si'
             },
             
-            'reunion_si': {
+            'evidencia_si': {
+                title: '¡Aquí tienes la evidencia jaja de pronto no me creas¡',
+                image: '19.gif',
+                si: 'reunion_si', 
+                no: 'reunion_si'
+            },
+                'reunion_si': {
                 title: '¡Bueno eso ha sido todo cuídate!!Para mayor información escríbale al creador por whats¡',
-                image: 'img-final.png',
+                image: '17.gif',
                 si: 'reunion_si', 
                 no: 'reunion_si'
             },
